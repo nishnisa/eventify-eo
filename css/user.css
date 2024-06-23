@@ -1,0 +1,123 @@
+/* General body styles */
+body {
+  font-family: "Poppins", sans-serif;
+}
+
+/* Sidebar styles */
+#sidebar {
+  width: 20%; /* example width */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  #sidebar {
+    width: 100%; /* full width on smaller screens */
+    position: relative; /* adjust as necessary */
+  }
+}
+/* Custom file input styles */
+.custom-file-input {
+  visibility: hidden;
+  width: 0;
+  height: 0;
+}
+
+.custom-file-label {
+  display: inline-block;
+  padding: 10px 20px;
+  color: white;
+  background-color: #4a67ee;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.custom-file-label:hover {
+  background-color: #3546ab;
+}
+
+/* Logo styles */
+.logo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 10rem;
+}
+
+.logo-image {
+  width: 130px;
+}
+
+.logo-title {
+  font-size: 25px;
+  font-weight: bold;
+}
+
+/* Sidebar link styles */
+#sidebar ul {
+  list-style: none;
+  padding-left: 0; /* Remove default padding */
+}
+
+#sidebar ul li {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  border-left: 4px solid transparent; /* Default border to keep space */
+}
+
+#sidebar ul li.active-link {
+  border-left: 4px solid #6366f1; /* indigo-400 */
+}
+
+#sidebar ul li a {
+  color: #6b7280; /* gray-400 */
+  text-decoration: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+#sidebar ul li a:hover {
+  color: #6366f1; /* indigo-400 */
+}
+
+#sidebar ul li a .material-icons-outlined {
+  margin-right: 10px;
+}
+
+#sidebar ul li.active-link a {
+  color: #6366f1; /* indigo-400 */
+}
+
+/* Table styles */
+th,
+td {
+  text-align: center;
+  vertical-align: middle;
+  padding: 12px;
+}
+
+.img-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%; /* or your desired percentage */
+  max-height: 100px; /* or your desired height, keeping images uniform */
+}
+
+/* Button styles */
+.btn-primary,
+.btn-danger {
+  width: 90px;
+}
+
+.title-db {
+  margin-left: 35rem;
+  margin-right: auto;
+}
+
+.active-link {
+  border-left: 4px solid #6366f1; /* indigo-400 */
+  color: #6366f1; /* indigo-400 */
+}

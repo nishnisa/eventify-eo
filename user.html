@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Event list</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <link rel="stylesheet" href="css/user.css" />
+  </head>
+  <body>
+    <div id="app" class="flex min-h-screen">
+      <div
+        class="transform md:translate-x-0 -translate-x-full flex w-full fixed md:relative md:w-1/5 min-h-full transition duration-500 ease-in-out"
+        id="sidebar"
+      >
+        <aside
+          class="flex flex-col w-2/3 md:w-full bg-white min-h-full shadow-2xl justify-between"
+        >
+          <div class="flex flex-col h-full">
+            <div class="logo-container">
+              <img src="img/logo.png" class="logo-image" alt="logo" />
+              <h1 class="logo-title">Eventify</h1>
+            </div>
+
+            <div class="flex w-full">
+              <ul class="space-y-2">
+                <li
+                  class="border-l-4 border-indigo-400 px-4 flex space-x-4 py-2"
+                >
+                  <span class="material-icons-outlined text-gray-400"
+                    >dashboard</span
+                  >
+                  <a
+                    href="#"
+                    class="text-md text-indigo-400 font-bold"
+                    id="dashboard-link"
+                    >Dashboard</a
+                  >
+                </li>
+                <li
+                  class="border-l-4 border-transparent px-4 flex space-x-4 py-2"
+                >
+                  <span class="material-icons-outlined text-gray-400"
+                    >people</span
+                  >
+                  <a
+                    href="#"
+                    class="text-md text-gray-400 font-bold"
+                    id="user-link"
+                    >User</a
+                  >
+                </li>
+                <li
+                  class="border-l-4 border-transparent px-4 flex space-x-4 py-2"
+                >
+                  <span class="material-icons-outlined text-gray-400"
+                    >contact_mail</span
+                  >
+                  <a
+                    href="#"
+                    class="text-md text-gray-400 font-bold"
+                    id="contacts-link"
+                    >Contacts</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="w-full p-5 flex">
+            <a
+              href="/"
+              class="bg-indigo-500 px-5 py-2 rounded text-white w-full text-center flex items-center justify-center space-x-4"
+            >
+              Logout
+            </a>
+          </div>
+        </aside>
+        <div
+          class="hidden w-1/3 h-full bg-black bg-opacity-50"
+          id="outer_sidebar"
+        ></div>
+      </div>
+      <div class="flex flex-col w-full md:w-4/5 min-h-full bg-gray-200">
+        <nav
+          class="w-full bg-indigo-500 py-2 flex justify-between px-4 md:px-10 mx-auto text-white h-16"
+        >
+          <div class="flex self-center">
+            <h1 class="text-2xl font-semibold title-db" id="page-title">
+              Event List
+            </h1>
+          </div>
+        </nav>
+
+        <main class="flex flex-col bg-gray-100 flex-grow" id="event-section">
+          <div class="container px-4 md:px-10 mx-auto">
+            <div class="flex justify-between mt-4">
+              <button
+                type="button"
+                class="content-center bg-indigo-500 px-5 py-2 rounded text-white"
+                data-bs-toggle="modal"
+                data-bs-target="#createModal"
+              >
+                Add Event
+              </button>
+
+              <div class="flex">
+                <h1 class="self-center">Search</h1>
+                <input
+                  type="search"
+                  class="border-2 border-gray-400 ml-2 focus:outline-none focus:ring ring-blue-400 rounded-md"
+                  id="destination_search"
+                  onkeyup="searchById()"
+                />
+              </div>
+              <!-- Create Data Modal -->
+              <div
+                class="modal fade"
+                id="createModal"
+                tabindex="-1"
+                aria-labelledby="createModalLabel"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="createModalLabel">
+                        Create New Event
+                      </h5>
+                    </div>
+                    <div class="modal-body">
+                      <label for="enama">Event Name</label>
+                      <input type="text" id="enama" class="form-control mb-2" />
+                      <label for="img">Image</label>
+                      <input
+                        type="file"
+                        id="img"
+                        class="form-control mb-2"
+                        placeholder="Upload Image"
+                        style="
+                          padding: 0.5em;
+                          border: thin solid grey;
+                          border-radius: 3px;
+                        "
+                      />
+                    </div>
+                    <div class="modal-footer">
+                      <button
+                        type="button"
+                        class="btn btn-primary"
+                        onclick="createData()"
+                        style="width: 150px"
+                      >
+                        Save Event
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Table to display events -->
+            <div class="bg-white shadow-xl rounded-md my-4">
+              <table class="text-left w-full" id="destination_detail">
+                <thead>
+                  <tr>
+                    <th
+                      class="py-4 px-6 bg-gray-200 font-bold text-sm border-b border-gray-200"
+                    >
+                      #
+                    </th>
+                    <th
+                      class="py-4 px-6 bg-gray-200 font-bold text-sm border-b border-gray-200"
+                    >
+                      Event Name
+                    </th>
+                    <th
+                      class="py-4 px-6 bg-gray-200 font-bold text-sm border-b border-gray-200"
+                    >
+                      Image
+                    </th>
+
+                    <th
+                      class="py-4 px-6 bg-gray-200 font-bold text-sm border-b border-gray-200"
+                    >
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody id="tbody"></tbody>
+              </table>
+            </div>
+          </div>
+          <!-- Edit Data Modal -->
+          <div
+            class="modal fade"
+            id="editModal"
+            tabindex="-1"
+            aria-labelledby="editModalLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="editModalLabel">Edit Event</h5>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  <label for="editEName">Event Name</label>
+                  <input type="text" id="editEName" class="form-control mb-2" />
+                  <label for="editImg">Image</label>
+                  <input
+                    type="file"
+                    id="editImg"
+                    class="form-control mb-2"
+                    placeholder="Upload New Image"
+                    style="
+                      padding: 0.5em;
+                      border: thin solid grey;
+                      border-radius: 3px;
+                    "
+                  />
+
+                  <input type="hidden" id="editId" />
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    onclick="updateData()"
+                    style="width: 150px"
+                  >
+                    Update Event
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        <main
+          class="flex flex-col bg-gray-100 flex-grow"
+          id="user-section"
+          style="display: none"
+        >
+          <div class="container px-4 md:px-10 mx-auto">
+            <div class="flex justify-between mt-4"></div>
+
+            <!-- Table to display users -->
+            <div class="bg-white shadow-xl rounded-md my-4">
+              <table class="text-left w-full" id="user_detail">
+                <thead>
+                  <tr>
+                    <th
+                      class="py-4 px-6 bg-gray-200 font-bold text-sm border-b border-gray-200"
+                    >
+                      #
+                    </th>
+                    <th
+                      class="py-4 px-6 bg-gray-200 font-bold text-sm border-b border-gray-200"
+                    >
+                      Username
+                    </th>
+                    <th
+                      class="py-4 px-6 bg-gray-200 font-bold text-sm border-b border-gray-200"
+                    >
+                      Email
+                    </th>
+                    <th
+                      class="py-4 px-6 bg-gray-200 font-bold text-sm border-b border-gray-200"
+                    >
+                      Password
+                    </th>
+                    <th
+                      class="py-4 px-6 bg-gray-200 font-bold text-sm border-b border-gray-200"
+                    >
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody id="user_tbody"></tbody>
+              </table>
+            </div>
+          </div>
+          <!-- Edit User Data Modal -->
+          <div
+            class="modal fade"
+            id="editUserModal"
+            tabindex="-1"
+            aria-labelledby="editUserModalLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  <label for="editUsername">Username</label>
+                  <input
+                    type="text"
+                    id="editUsername"
+                    class="form-control mb-2"
+                  />
+                  <label for="editEmail">Email</label>
+                  <input type="text" id="editEmail" class="form-control mb-2" />
+                  <label for="editPassword">Password</label>
+                  <input
+                    type="text"
+                    id="editPassword"
+                    class="form-control mb-2"
+                  />
+                  <input type="hidden" id="editUserId" />
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    onclick="updateUserData()"
+                    style="width: 150px"
+                  >
+                    Update User
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+        <main
+          class="flex flex-col bg-gray-100 flex-grow"
+          id="contacts-section"
+          style="display: none"
+        >
+          <div class="container px-4 md:px-10 mx-auto">
+            <div class="flex justify-between mt-4">
+              <h1 class="text-xl font-bold">Contact Form</h1>
+            </div>
+
+            <!-- Insert your Contact Form HTML here -->
+            <!-- Followed by a section to list and delete contacts -->
+
+            <div class="bg-white shadow-xl rounded-md my-4">
+              <table class="text-left w-full" id="contacts_detail">
+                <thead>
+                  <tr>
+                    <th
+                      class="py-4 px-6 bg-gray-200 font-bold text-sm border-b border-gray-200"
+                    >
+                      #
+                    </th>
+                    <th
+                      class="py-4 px-6 bg-gray-200 font-bold text-sm border-b border-gray-200"
+                    >
+                      Name
+                    </th>
+                    <th
+                      class="py-4 px-6 bg-gray-200 font-bold text-sm border-b border-gray-200"
+                    >
+                      Email
+                    </th>
+                    <th
+                      class="py-4 px-6 bg-gray-200 font-bold text-sm border-b border-gray-200"
+                    >
+                      Phone
+                    </th>
+                    <th
+                      class="py-4 px-6 bg-gray-200 font-bold text-sm border-b border-gray-200"
+                    >
+                      Message
+                    </th>
+                    <th
+                      class="py-4 px-6 bg-gray-200 font-bold text-sm border-b border-gray-200"
+                    >
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody id="contacts_tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </main>
+
+        <footer
+          class="flex justify-between items-center h-14 px-10 py-50 mx-auto w-full bg-white"
+        >
+          <div class="text-gray-400">Group &copy; 14</div>
+          <div class="">
+            <input type="radio" name="" id="" />
+          </div>
+        </footer>
+      </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.9.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.9.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.9.0/firebase-storage.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      var firebaseConfig = {
+        apiKey: "AIzaSyA0T7C32rZKp6fE1wl6HPQO-jMdDcOn2lI",
+        authDomain: "project3-ccit-4se1.firebaseapp.com",
+        databaseURL: "https://project3-ccit-4se1-default-rtdb.firebaseio.com",
+        projectId: "project3-ccit-4se1",
+        storageBucket: "project3-ccit-4se1.appspot.com",
+        messagingSenderId: "1047457157480",
+        appId: "1:1047457157480:web:baa725f32b7e7b660946dd",
+        measurementId: "G-WWC820B746",
+      };
+      firebase.initializeApp(firebaseConfig);
+      let database = firebase.database();
+
+      function createData() {
+        const ename = document.getElementById("enama").value;
+        const imgFile = document.getElementById("img").files[0]; // Get the file from input
+        if (imgFile) {
+          const storageRef = firebase.storage().ref("images/" + imgFile.name);
+          const uploadTask = storageRef.put(imgFile);
+
+          uploadTask.on(
+            "state_changed",
+            function (snapshot) {
+              // Handle progress
+              const progress =
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              console.log("Upload is " + progress + "% done");
+            },
+            function (error) {
+              // Handle unsuccessful uploads
+              alert("Error uploading image: " + error);
+            },
+            function () {
+              // Handle successful uploads on complete
+              uploadTask.snapshot.ref
+                .getDownloadURL()
+                .then(function (downloadURL) {
+                  console.log("File available at", downloadURL);
+                  database
+                    .ref("events/" + database.ref().child("events").push().key)
+                    .set({
+                      name: ename,
+                      imageUrl: downloadURL,
+                    })
+                    .then(() => {
+                      alert("Event saved successfully!");
+                      fetchData();
+                      $("#createModal").modal("hide"); // Close modal using jQuery
+                    })
+                    .catch((error) => {
+                      console.error("Failed to save event: ", error);
+                      alert("Failed to save event: " + error.message);
+                    });
+                });
+            }
+          );
+        } else {
+          alert("Please select an image to upload.");
+        }
+      }
+
+      function searchById() {
+        var input = document.getElementById("destination_search");
+        var filter = input.value.toUpperCase(); // Get the search term and convert to uppercase
+        var table = document.getElementById("destination_detail");
+        var tr = table.getElementsByTagName("tr");
+
+        for (var i = 1; i < tr.length; i++) {
+          // Start loop from 1 if the first row is a header
+          var td = tr[i].getElementsByTagName("td")[0]; // Assumes ID is in the first column
+          if (td) {
+            var txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1 || filter === "") {
+              tr[i].style.display = ""; // Show the row
+            } else {
+              tr[i].style.display = "none"; // Hide the row
+            }
+          }
+        }
+        console.log("Search filter applied: " + filter); // Debug: Output the current filter
+      }
+
+      function updateData() {
+        const key = document.getElementById("editId").value;
+        const updatedEName = document.getElementById("editEName").value;
+        const imgFile = document.getElementById("editImg").files[0]; // Get the file from input
+
+        if (imgFile) {
+          const storageRef = firebase.storage().ref("images/" + imgFile.name);
+          const uploadTask = storageRef.put(imgFile);
+
+          uploadTask.on(
+            "state_changed",
+            function (snapshot) {
+              const progress =
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              console.log("Upload is " + progress + "% done");
+            },
+            function (error) {
+              alert("Error uploading image: " + error);
+            },
+            function () {
+              uploadTask.snapshot.ref
+                .getDownloadURL()
+                .then(function (downloadURL) {
+                  console.log("File available at", downloadURL);
+                  database
+                    .ref("events/" + key)
+                    .update({
+                      name: updatedEName,
+                      imageUrl: downloadURL,
+                    })
+                    .then(() => {
+                      alert("Event updated successfully!");
+                      fetchData();
+                      $("#editModal").modal("hide"); // Close modal using jQuery
+                    })
+                    .catch((error) => {
+                      console.error("Failed to update event: ", error);
+                      alert("Failed to update event: " + error.message);
+                    });
+                });
+            }
+          );
+        } else {
+          // Update without changing the image
+          database
+            .ref("events/" + key)
+            .update({
+              name: updatedEName,
+            })
+            .then(() => {
+              alert("Event updated successfully without changing image!");
+              fetchData();
+              $("#editModal").modal("hide"); // Close modal using jQuery
+            })
+            .catch((error) => {
+              console.error("Failed to update event: ", error);
+              alert("Failed to update event: " + error.message);
+            });
+        }
+      }
+
+      function fetchData() {
+        const ref = database.ref("events");
+        ref.on(
+          "value",
+          function (snapshot) {
+            const tbody = document.getElementById("tbody");
+            tbody.innerHTML = ""; // Clear existing entries
+            let count = 1; // Initialize counter for row numbers
+
+            snapshot.forEach(function (childSnapshot) {
+              const childKey = childSnapshot.key;
+              const childData = childSnapshot.val();
+
+              // Create a new row in the table
+              var row = document.createElement("tr");
+              row.innerHTML = `
+              <td>${count}</td>
+              <td>${childData.name}</td>
+              <td><img src="${childData.imageUrl}" alt="Event Image" class="img-fluid img-center"></td>
+              <td>
+                  <button class='btn btn-primary me-2' onclick="showEditModal('${childKey}')">Edit</button>
+                  <button class='btn btn-danger' onclick="deleteData('${childKey}')">Delete</button>
+              </td>`;
+              tbody.appendChild(row);
+              count++; // Increment the counter after adding each row
+            });
+          },
+          function (error) {
+            console.error("Error fetching data: ", error);
+          }
+        );
+      }
+
+      function fetchUserData() {
+        const ref = database.ref("users");
+        ref.on(
+          "value",
+          function (snapshot) {
+            const userTbody = document.getElementById("user_tbody");
+            userTbody.innerHTML = ""; // Clear existing entries
+            let count = 1; // Initialize counter for row numbers
+
+            snapshot.forEach(function (childSnapshot) {
+              const childKey = childSnapshot.key;
+              const childData = childSnapshot.val();
+              const maskedPassword = childData.password.replace(/./g, "*"); // Mask the password
+
+              // Create a new row in the user table
+              var row = document.createElement("tr");
+              row.innerHTML = `
+              <td>${count}</td>
+              <td>${childData.username}</td>
+              <td>${childData.email}</td>
+              <td>${maskedPassword}</td>
+              <td>
+                  <button class='btn btn-primary me-2' onclick="showEditUserModal('${childKey}')">Edit</button>
+                  <button class='btn btn-danger' onclick="deleteUserData('${childKey}')">Delete</button>
+              </td>`;
+              userTbody.appendChild(row);
+              count++; // Increment the counter after adding each row
+            });
+          },
+          function (error) {
+            console.error("Error fetching data: ", error);
+          }
+        );
+      }
+
+      function fetchContacts() {
+        const ref = firebase.database().ref("contacts");
+        ref.on("value", function (snapshot) {
+          const contacts_tbody = document.getElementById("contacts_tbody");
+          contacts_tbody.innerHTML = ""; // Clear existing entries
+          let count = 1;
+
+          snapshot.forEach(function (childSnapshot) {
+            const childKey = childSnapshot.key;
+            const childData = childSnapshot.val();
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td>${count}</td>
+              <td>${childData.name}</td>
+              <td>${childData.email}</td>
+              <td>${childData.phone}</td>
+              <td>${childData.message}</td>
+              <td>
+                  <button class='btn btn-danger' onclick="deleteContact('${childKey}')">Delete</button>
+              </td>`;
+            contacts_tbody.appendChild(row);
+            count++;
+          });
+        });
+      }
+
+      function deleteContact(key) {
+        const ref = firebase.database().ref("contacts/" + key);
+        ref
+          .remove()
+          .then(() => {
+            alert("Contact successfully deleted");
+            fetchContacts(); // Refresh the contact list after deletion
+          })
+          .catch((error) => {
+            console.error("Error deleting contact: ", error);
+            alert("Failed to delete contact: " + error.message);
+          });
+      }
+
+      document
+        .getElementById("contacts-link")
+        .addEventListener("click", function () {
+          document.getElementById("event-section").style.display = "none";
+          document.getElementById("user-section").style.display = "none";
+          document.getElementById("contacts-section").style.display = "block";
+          document.getElementById("page-title").innerText = "Contact List";
+          setActiveLink("contacts-link");
+          fetchContacts(); // Load contacts when this section is activated
+        });
+
+      // Include this function call in your initial setup to handle the new section
+      setActiveLink("dashboard-link"); // Ensure the default active link is set
+
+      document.addEventListener("DOMContentLoaded", function () {
+        fetchData();
+        fetchUserData();
+      });
+
+      function showEditModal(key) {
+        const childRef = firebase.database().ref("events/" + key);
+        childRef
+          .once("value")
+          .then(function (snapshot) {
+            const data = snapshot.val();
+            if (data) {
+              document.getElementById("editEName").value = data.name;
+              document
+                .getElementById("editImg")
+                .setAttribute("data-current-img", data.imageUrl); // Store current image URL if needed
+              document.getElementById("editId").value = key;
+              var editModal = new bootstrap.Modal(
+                document.getElementById("editModal"),
+                {
+                  keyboard: false,
+                }
+              );
+              editModal.show();
+            } else {
+              console.error("No data found for key:", key);
+            }
+          })
+          .catch(function (error) {
+            console.error("Error fetching data:", error);
+          });
+      }
+
+      function showEditUserModal(key) {
+        const childRef = firebase.database().ref("users/" + key);
+        childRef
+          .once("value")
+          .then(function (snapshot) {
+            const data = snapshot.val();
+            if (data) {
+              document.getElementById("editUsername").value = data.username;
+              document.getElementById("editEmail").value = data.email;
+              document.getElementById("editPassword").value = data.password;
+              document.getElementById("editUserId").value = key;
+              var editModal = new bootstrap.Modal(
+                document.getElementById("editUserModal"),
+                {
+                  keyboard: false,
+                }
+              );
+              editModal.show();
+            } else {
+              console.error("No data found for key:", key);
+            }
+          })
+          .catch(function (error) {
+            console.error("Error fetching data:", error);
+          });
+      }
+
+      function deleteData(key) {
+        database
+          .ref("events/" + key)
+          .remove() // Ensure this is the correct path
+          .then(() => {
+            alert("Event successfully deleted");
+            fetchData(); // Refresh the data display after deletion
+          })
+          .catch((error) => {
+            console.error("Error deleting event: ", error);
+            alert("Failed to delete event: " + error.message);
+          });
+      }
+
+      function deleteUserData(key) {
+        database
+          .ref("users/" + key)
+          .remove() // Ensure this is the correct path
+          .then(() => {
+            alert("User successfully deleted");
+            fetchUserData(); // Refresh the data display after deletion
+          })
+          .catch((error) => {
+            console.error("Error deleting user: ", error);
+            alert("Failed to delete user: " + error.message);
+          });
+      }
+
+      function updateUserData() {
+        const key = document.getElementById("editUserId").value;
+        const updatedUsername = document.getElementById("editUsername").value;
+        const updatedEmail = document.getElementById("editEmail").value;
+        const updatedPassword = document.getElementById("editPassword").value;
+
+        database
+          .ref("users/" + key)
+          .update({
+            username: updatedUsername,
+            email: updatedEmail,
+            password: updatedPassword,
+          })
+          .then(() => {
+            alert("User updated successfully!");
+            fetchUserData();
+            $("#editUserModal").modal("hide"); // Close modal using jQuery
+          })
+          .catch((error) => {
+            console.error("Failed to update user: ", error);
+            alert("Failed to update user: " + error.message);
+          });
+      }
+      function setActiveLink(activeLinkId) {
+        // Clear all active links
+        const links = document.querySelectorAll("#sidebar ul li");
+        links.forEach((link) => {
+          link.classList.remove("active-link");
+          link.style.borderLeft = "4px solid transparent"; // Reset to transparent
+        });
+
+        // Set active link
+        const activeLink = document.getElementById(activeLinkId).parentNode; // Assuming 'a' is inside 'li'
+        activeLink.classList.add("active-link");
+        activeLink.style.borderLeft = "4px solid #6366F1"; // Set the color for active link
+      }
+
+      document
+        .getElementById("dashboard-link")
+        .addEventListener("click", function () {
+          document.getElementById("event-section").style.display = "block";
+          document.getElementById("user-section").style.display = "none";
+          document.getElementById("contacts-section").style.display = "none";
+          document.getElementById("page-title").innerText = "Event List";
+          setActiveLink("dashboard-link");
+        });
+
+      document
+        .getElementById("user-link")
+        .addEventListener("click", function () {
+          document.getElementById("event-section").style.display = "none";
+          document.getElementById("user-section").style.display = "block";
+          document.getElementById("contacts-section").style.display = "none";
+          document.getElementById("page-title").innerText = "User List";
+          setActiveLink("user-link");
+        });
+
+      document
+        .getElementById("contacts-link")
+        .addEventListener("click", function () {
+          document.getElementById("event-section").style.display = "none";
+          document.getElementById("user-section").style.display = "none";
+          document.getElementById("contacts-section").style.display = "block";
+          document.getElementById("page-title").innerText = "Contacts List";
+          setActiveLink("contacts-link");
+        });
+    </script>
+  </body>
+</html>
